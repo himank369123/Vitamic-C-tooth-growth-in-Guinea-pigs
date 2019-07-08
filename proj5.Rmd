@@ -1,0 +1,82 @@
+---
+title: "Effect of Vitamin C on Tooth Growth in Guinea Pigs"
+author: "Himank Jain"
+date: "March 17, 2019"
+output: pdf_document
+---
+
+## Overview
+
+* We use 'ToothGrowth' dataset and perform exploratory analysis on it.
+* Then we use confidence intervals and hypothesis tests to compare tooth growth.
+
+## Exploratory Analysis:
+
+```{r}
+library(datasets)
+library(ggplot2)
+head(ToothGrowth)
+tail(ToothGrowth)
+summary(ToothGrowth)
+str(ToothGrowth)
+```
+
+Plotting boxplot of toothlength per dosages & supplement:
+
+```{r}
+data <- ToothGrowth
+levels(data$supp) <- c("OrangeJuice", "AscorbicAcid")
+g <- ggplot(data, aes(x = factor(dose), y = len))
+g <- g + facet_grid(.~supp)
+g <- g + geom_boxplot(aes(fill = supp))
+g <- g + labs(title = "Tooth Length")
+g <- g + labs(x = "Dose (mg/day)", y = "Tooth Length")
+print(g)
+```
+
+We observe Orange juice shows better results for 0.5 and 1 mg/day dosages however 2 mg/day results are quite similar
+
+## Assumptions
+
+We assume from here, ToothGrowth data follows normal distribution.
+
+## Hypothesis Tests
+
+* Testing three different hypothesis  
+
+1) For x = 0.5 mg/day
+
+```{r}
+h0.5 <- t.test(len ~ supp, data = subset(data, dose == 0.5))
+h0.5$conf.int
+h0.5$p.value
+```
+
+We reject null hypothesis as the p-value is smaller than significant level of 0.05.
+Therefore orange juice results in more tooth growth than absorbic acid.
+
+
+2) For x = 1 mg/day
+
+```{r}
+h1 <- t.test(len ~ supp, data = subset(data, dose == 1))
+h1$conf.int
+h1$p.value
+```
+
+We again reject null hypothesis as the p-value is smaller than significant level of 0.05.
+Therefore orange juice results in more tooth growth than absorbic acid.
+
+3) For x = 2 mg/day
+
+```{r}
+h2 <- t.test(len ~ supp, data = subset(data, dose == 2))
+h2$conf.int
+h2$p.value
+```
+
+Now, p-value is larger than the significance level of 0.05. therefore we cannot reject null hypothesis. Therefor orange juice and absorbic acid have same effect now.
+
+## Conclusions
+
+We conducted three hypothesis tests. We inferred that Orange juice is better for tooth growth in guinea pigs in doses of 0.5 and 1 mg/day. however no difference between orange juice and absorbic acid for 2 mg/day dosage. 
